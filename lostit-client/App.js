@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  Alert,Text
+  Alert, Text
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -9,6 +9,7 @@ import * as ImagePicker from "expo-image-picker";
 import FeedScreen from "./src/screens/FeedScreen";
 import SearchScreen from "./src/screens/SearchScreen";
 import ReportScreen from "./src/screens/ReportScreen";
+import AboutScreen from "./src/screens/AboutScreen";
 
 import BottomNav from "./src/components/BottomNav";
 import FilterBar from "./src/components/FilterBar";
@@ -175,7 +176,6 @@ export default function App() {
     );
 
   return (
-
     <LinearGradient
       colors={[
         "#0f172a",
@@ -188,138 +188,91 @@ export default function App() {
         paddingHorizontal: 20,
       }}
     >
-      <Text
-        style={{
-          color: "white",
-          fontSize: 28,
-          fontWeight: "bold",
-          marginBottom: 15,
-        }}
-      >
-        LostIt
-      </Text>
+      {screen !== "about" && (
+        <Text
+          style={{
+            color: "white",
+            fontSize: 28,
+            fontWeight: "bold",
+            marginBottom: 15,
+          }}
+        >
+          LostIt
+        </Text>
+      )}
 
-      <StatsCard
-        items={items}
-      />
+      {screen === "feed" && (
+        <>
+          <StatsCard
+            items={items}
+          />
 
-      <FilterBar
-        filter={filter}
-        setFilter={setFilter}
-        showMine={showMine}
-        setShowMine={
-          setShowMine
-        }
-      />
+          <FilterBar
+            filter={filter}
+            setFilter={setFilter}
+            showMine={showMine}
+            setShowMine={setShowMine}
+          />
 
-      {screen ===
-        "feed" && (
           <FeedScreen
-            items={
-              visibleItems
-            }
-            ownedItems={
-              ownedItems
-            }
-            markClaimed={
-              markClaimed
-            }
-            confirmDelete={
-              confirmDelete
-            }
-            getTimeAgo={
-              getTimeAgo
-            }
-            refreshing={
-              refreshing
-            }
-            onRefresh={
-              onRefresh
-            }
+            items={visibleItems}
+            ownedItems={ownedItems}
+            markClaimed={markClaimed}
+            confirmDelete={confirmDelete}
+            getTimeAgo={getTimeAgo}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
             setMatches={setMatches}
             setScreen={setScreen}
           />
-        )}
+        </>
+      )}
 
-      {screen ===
-        "search" && (
-          <SearchScreen
-            search={search}
-            setSearch={
-              setSearch
-            }
-            items={
-              visibleItems
-            }
-            ownedItems={
-              ownedItems
-            }
-            markClaimed={
-              markClaimed
-            }
-            confirmDelete={
-              confirmDelete
-            }
-            getTimeAgo={
-              getTimeAgo
-            }
-          />
-        )}
+      {screen === "search" && (
+        <SearchScreen
+          search={search}
+          setSearch={setSearch}
+          items={visibleItems}
+          ownedItems={ownedItems}
+          markClaimed={markClaimed}
+          confirmDelete={confirmDelete}
+          getTimeAgo={getTimeAgo}
+        />
+      )}
 
-      {screen ===
-        "report" && (
-          <ReportScreen
-            title={title}
-            setTitle={
-              setTitle
-            }
-            location={
-              location
-            }
-            setLocation={
-              setLocation
-            }
-            contact={
-              contact
-            }
-            setContact={
-              setContact
-            }
-            description={
-              description
-            }
-            setDescription={
-              setDescription
-            }
-            image={image}
-            category={
-              category
-            }
-            setCategory={
-              setCategory
-            }
-            type={type}
-            setType={
-              setType
-            }
-            pickImage={
-              pickImage
-            }
-            addItem={
-              handleSubmit
-            }
-          />
-        )}
+      {screen === "report" && (
+        <ReportScreen
+          title={title}
+          setTitle={setTitle}
+          location={location}
+          setLocation={setLocation}
+          contact={contact}
+          setContact={setContact}
+          description={description}
+          setDescription={setDescription}
+          image={image}
+          category={category}
+          setCategory={setCategory}
+          type={type}
+          setType={setType}
+          pickImage={pickImage}
+          addItem={handleSubmit}
+        />
+      )}
+
       {screen === "matches" && (
         <MatchesScreen
           matches={matches}
         />
       )}
 
+      {screen === "about" && (
+        <AboutScreen />
+      )}
+
       <BottomNav
-        setScreen={
-          setScreen
-        }
+        screen={screen}
+        setScreen={setScreen}
       />
     </LinearGradient>
   );

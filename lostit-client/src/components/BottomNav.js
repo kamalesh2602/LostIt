@@ -7,6 +7,7 @@ export default function BottomNav({ screen, setScreen }) {
         { id: "feed", icon: "🏠", label: "Home" },
         { id: "report", icon: "➕", label: "Report" },
         { id: "search", icon: "🔎", label: "Search" },
+        { id: "about",icon: "ℹ", label: "About",}
     ];
 
     return (
