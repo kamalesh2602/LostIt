@@ -7,7 +7,7 @@ export default function BottomNav({ screen, setScreen }) {
         { id: "feed", icon: "🏠", label: "Home" },
         { id: "report", icon: "➕", label: "Report" },
         { id: "search", icon: "🔎", label: "Search" },
-        { id: "about",icon: "ℹ", label: "About",}
+        { id: "about", icon: "ℹ️", label: "About" } // Added variation selector token to the emoji for clean rendering
     ];
 
     return (
@@ -38,11 +38,11 @@ const styles = StyleSheet.create({
     navBarContainer: {
         flexDirection: "row",
         justifyContent: "space-around",
-        backgroundColor: "rgba(23, 37, 84, 0.95)", // High contrast, slightly translucent navy overlay
+        backgroundColor: "rgba(23, 37, 84, 0.95)", 
         borderTopWidth: 1,
         borderTopColor: "rgba(255, 255, 255, 0.1)",
-        paddingVertical: Platform.OS === "ios" ? 20 : 12,
-        paddingBottom: Platform.OS === "ios" ? 30 : 16, // Extra safe space cushion on newer devices
+        paddingVertical: Platform.OS === "ios" ? 14 : 10,
+        paddingBottom: Platform.OS === "ios" ? 32 : 18, 
         position: "absolute",
         bottom: 0,
         left: 0,
@@ -53,14 +53,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         flex: 1,
+        minHeight: 44, // Ensures high touch accuracy across all four items
     },
     iconWrapper: {
         alignItems: "center",
+        justifyContent: "center",
         position: "relative",
-        paddingVertical: 4,
+        paddingBottom: 8, // Adds a safe layout buffer block inside the box container
+        minWidth: 40,
     },
     iconText: {
-        fontSize: 26,
+        fontSize: 24, // Optimized down slightly from 26 so 4 columns balance perfectly
+        textAlign: "center",
+        includeFontPadding: false, // Removes extra native spacing quirks on Android devices
     },
     iconActive: {
         opacity: 1,
@@ -71,7 +76,7 @@ const styles = StyleSheet.create({
     },
     activeIndicatorLine: {
         position: "absolute",
-        bottom: -6,
+        bottom: 0, // Brought up into safe internal padding range to stop vertical clipping
         width: 16,
         height: 3,
         borderRadius: 2,

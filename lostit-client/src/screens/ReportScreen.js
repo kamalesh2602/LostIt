@@ -119,76 +119,88 @@ const styles = StyleSheet.create({
     scrollContainer: {
         paddingHorizontal: SIZES.medium,
         paddingTop: SIZES.small,
-        paddingBottom: 140, // Ensures layout forms don't tuck under BottomNav
+        paddingBottom: 150, // Extra breathing space above BottomNav
     },
     formContainer: {
         backgroundColor: COLORS.cardBg,
         borderRadius: SIZES.radiusLarge,
-        padding: SIZES.medium,
+        padding: SIZES.medium + 4, // Increased internal padding for breathing room
         ...SHADOWS.medium,
     },
     formHeaderTitle: {
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: "800",
         color: COLORS.textPrimary,
-        marginBottom: SIZES.medium,
+        marginBottom: SIZES.large,
         textAlign: "center",
+        letterSpacing: -0.5,
     },
     fieldLabel: {
-        fontSize: SIZES.font,
+        fontSize: 13,
         fontWeight: "700",
-        color: COLORS.textPrimary,
+        color: COLORS.textSecondary,
+        textTransform: "uppercase", // Clean, subtle developer label styling
+        letterSpacing: 0.6,
         marginBottom: 6,
-        marginTop: 4,
+        marginTop: 6,
     },
     inputField: {
         backgroundColor: "#F8FAFC",
         borderWidth: 1,
-        borderColor: COLORS.border,
+        borderColor: "#E2E8F0",
         borderRadius: SIZES.radiusMedium,
-        paddingHorizontal: 14,
-        paddingVertical: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 14,
         fontSize: SIZES.font,
         color: COLORS.textPrimary,
         marginBottom: SIZES.medium,
     },
     textAreaField: {
-        height: 80,
-        textAlignVertical: "top", // Aligns multi-line text input on Android
+        height: 100, // Slightly taller text box for better multi-line viewing
+        textAlignVertical: "top",
     },
     imagePreviewContainer: {
         borderRadius: SIZES.radiusMedium,
         overflow: "hidden",
-        marginBottom: SIZES.medium,
+        marginVertical: SIZES.medium,
         borderWidth: 1,
         borderColor: COLORS.border,
+        ...SHADOWS.light,
     },
     uploadedImage: {
         width: "100%",
-        height: 180,
+        height: 190,
         resizeMode: "cover",
     },
+    
+    // Modernized Media Upload Button (Sleek Border Style)
     uploadButton: {
-        backgroundColor: "#F59E0B",
-        paddingVertical: 14,
-        borderRadius: SIZES.radiusMedium,
+        flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: SIZES.small,
-        ...SHADOWS.light,
+        backgroundColor: "#FEF3C7", // Very soft, premium amber highlight background tint
+        borderWidth: 1.5,
+        borderColor: "#F59E0B",
+        borderStyle: "dashed", // Dashed layout border line suggests an action area drop-zone
+        borderRadius: SIZES.radiusMedium,
+        paddingVertical: 14,
+        marginTop: SIZES.base,
+        marginBottom: SIZES.large, // Increased spacing separation between form actions
     },
     uploadButtonText: {
-        color: COLORS.white,
+        color: "#B45309", // High contrast dark amber font text
         fontWeight: "700",
         fontSize: SIZES.font,
+        letterSpacing: 0.3,
     },
+    
+    // Modernized Main CTA Action Submit Button
     submitButton: {
         backgroundColor: COLORS.primary,
-        paddingVertical: 15,
+        paddingVertical: 16,
         borderRadius: SIZES.radiusMedium,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: SIZES.base,
         ...SHADOWS.medium,
     },
     submitButtonText: {
@@ -197,4 +209,5 @@ const styles = StyleSheet.create({
         fontSize: SIZES.medium,
         letterSpacing: 0.5,
     },
+    
 });
