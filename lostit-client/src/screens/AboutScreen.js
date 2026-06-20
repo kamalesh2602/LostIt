@@ -27,20 +27,36 @@ export default function AboutScreen() {
 
       <Text
         style={{
-          color: "white",
+          color: "#e2e8f0",
           lineHeight: 24,
+          fontSize: 16,
         }}
       >
         LostIt is a community-driven
-        lost and found platform that
-        helps people reconnect with
-        their lost belongings.
+        Lost & Found platform designed
+        for campuses, hostels and
+        organizations.
+
+        {"\n\n"}
+
+        Report lost items, discover
+        found belongings and reconnect
+        people with what matters to
+        them through a simple mobile
+        experience.
+
+        {"\n\n"}
+
+        This project is open source and
+        welcomes contributions, bug
+        reports and feature requests.
       </Text>
 
       <Text
         style={{
           color: "#94a3b8",
-          marginTop: 20,
+          marginTop: 25,
+          fontSize: 14,
         }}
       >
         Version 1.0
@@ -49,16 +65,18 @@ export default function AboutScreen() {
       <Text
         style={{
           color: "#94a3b8",
-          marginTop: 10,
+          marginTop: 6,
+          fontSize: 14,
         }}
       >
-        Built by Kamalesh G
+        Built with React Native,
+        Node.js and MongoDB Atlas
       </Text>
 
       <TouchableOpacity
         onPress={() =>
           Linking.openURL(
-            "mailto:23z332@psgtech.ac.in?subject=LostIt Feedback"
+            "https://github.com/kamalesh2602/LostIt/issues"
           )
         }
         style={{
@@ -73,9 +91,37 @@ export default function AboutScreen() {
             color: "white",
             textAlign: "center",
             fontWeight: "bold",
+            fontSize: 16,
           }}
         >
-          📧 Send Feedback
+          🐛 Report an Issue
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() =>
+          Linking.openURL(
+            "https://github.com/kamalesh2602/LostIt"
+          )
+        }
+        style={{
+          backgroundColor: "#1e293b",
+          padding: 15,
+          borderRadius: 12,
+          marginTop: 12,
+          borderWidth: 1,
+          borderColor: "#475569",
+        }}
+      >
+        <Text
+          style={{
+            color: "white",
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: 16,
+          }}
+        >
+          ⭐ View Source Code
         </Text>
       </TouchableOpacity>
     </View>

@@ -28,6 +28,7 @@ Thumbs.db
 
 # vscode
 .vscode/
+.claude
 
 # android
 android/
