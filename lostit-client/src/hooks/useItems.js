@@ -21,8 +21,8 @@ export default function useItems() {
 
   const loadItems = async () => {
     try {
-      const data = await getItems();
-      console.log("loaded", data.length);
+      const data =
+        await getItems();
 
       const ownershipMap = {};
 
@@ -36,10 +36,15 @@ export default function useItems() {
           !!token;
       }
 
-      setOwnedItems(ownershipMap);
+      setOwnedItems(
+        ownershipMap
+      );
       setItems(data);
     } catch (err) {
-      console.log(err);
+      console.error(
+        "Failed to load items:",
+        err
+      );
     }
   };
 
@@ -49,19 +54,19 @@ export default function useItems() {
     setRefreshing(false);
   };
 
-    const addItem = async (item) => {
-  const savedItem =
-    await createItem(item);
+  const addItem = async (item) => {
+    const savedItem =
+      await createItem(item);
 
-  console.log("saved", savedItem);
+    console.log("saved", savedItem);
 
-  await AsyncStorage.setItem(
-    `owner_${savedItem._id}`,
-    savedItem.ownerToken
-  );
+    await AsyncStorage.setItem(
+      `owner_${savedItem._id}`,
+      savedItem.ownerToken
+    );
 
-  await loadItems();
-};
+    await loadItems();
+  };
 
   const markClaimed = async (id) => {
     const ownerToken =

@@ -2,6 +2,8 @@
 const API_URL =
     process.env.EXPO_PUBLIC_API_URL;
 
+
+
 export const getItems = async () => {
     const response = await fetch(
         `${API_URL}/items`
@@ -80,11 +82,11 @@ export const getMatches =
     };
 
 export const getMatchCount =
-  async (id) => {
-    const response =
-      await fetch(
-        `${API_URL}/items/${id}/match-count`
-      );
+    async (id) => {
+        const response =
+            await fetch(
+                `${API_URL}/items/${id}/match-count`
+            );
 
-    return response.json();
-  };
+        return response.json();
+    };
