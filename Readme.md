@@ -1,20 +1,23 @@
 # LostIt
 
-LostIt is a React Native application that helps users report, discover, and recover lost and found items. Users can post lost or found items, search listings, find potential matches, and directly contact item owners.
+LostIt is a community-driven Lost & Found platform built with React Native, Node.js, MongoDB Atlas, and Render.
+
+The application helps users report, discover, and recover lost items through a simple mobile-first experience.
 
 ## Features
 
-* Create Lost and Found posts
-* Search items by title
-* Filter Lost, Found, Active, and Claimed items
-* My Posts view
+* Report lost items
+* Report found items
+* Search items
+* Match lost and found items
+* View possible matches
 * Mark items as claimed
-* Delete owned posts
-* Match Finder for similar lost/found items
-* Match Count badge on every item
-* Direct phone call support
-* Pull-to-refresh
-* MongoDB persistence
+* Delete your own posts
+* My Posts filter
+* Direct call to item owner
+* Pull-to-refresh support
+* Cloud-hosted backend using Render
+* MongoDB Atlas database
 
 ## Tech Stack
 
@@ -29,43 +32,19 @@ LostIt is a React Native application that helps users report, discover, and reco
 
 * Node.js
 * Express.js
-* MongoDB
+* MongoDB Atlas
 * Mongoose
+
+### Deployment
+
+* Render
+* MongoDB Atlas
 
 ## Project Structure
 
 ```text
 lostit-client/
-├── src/
-│   ├── components/
-│   ├── hooks/
-│   ├── screens/
-│   ├── services/
-│   └── utils/
-├── App.js
-└── .env
-
 lostit-server/
-├── controllers/
-├── models/
-├── routes/
-├── config/
-└── server.js
-```
-
-## Environment Variables
-
-Client `.env`
-
-```env
-EXPO_PUBLIC_API_URL=http://YOUR_IP:5000/api
-```
-
-Server `.env`
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
 ```
 
 ## Installation
@@ -75,6 +54,18 @@ MONGO_URI=your_mongodb_connection_string
 ```bash
 cd lostit-server
 npm install
+```
+
+Create a `.env` file:
+
+```env
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+```
+
+Run:
+
+```bash
 npm run dev
 ```
 
@@ -83,26 +74,74 @@ npm run dev
 ```bash
 cd lostit-client
 npm install
+```
+
+Create a `.env` file:
+
+```env
+EXPO_PUBLIC_API_URL=http://<ip>/api  
+```
+
+Run:
+
+```bash
 npx expo start
 ```
 
-## Match Finder
+## API Endpoints
 
-LostIt automatically finds potential matches between Lost and Found posts based on:
+### Get Items
 
-* Category
-* Title similarity
-* Active status
+```http
+GET /api/items
+```
 
-Users can view potential matches and directly contact the poster.
+### Create Item
 
-## Future Improvements
+```http
+POST /api/items
+```
 
-* Image upload via Cloudinary
-* Location-based filtering
-* Campus hotspot analytics
-* Better match ranking
+### Mark Claimed
 
-## Author
+```http
+PATCH /api/items/:id/claim
+```
 
-Kamalesh G
+### Delete Item
+
+```http
+DELETE /api/items/:id
+```
+
+### Get Matches
+
+```http
+GET /api/items/:id/matches
+```
+
+## Roadmap
+
+### Version 1.0
+
+* Lost and found reporting
+* Matching system
+* Ownership protection
+* Mobile app deployment
+
+### Future Versions
+
+* Push notifications
+* Smarter matching algorithm
+* Cloud image storage
+* Community moderation tools
+
+## Contributing
+
+Contributions are welcome.
+
+Please read CONTRIBUTING.md before submitting pull requests.
+
+## License
+
+This project is licensed under the MIT License.
