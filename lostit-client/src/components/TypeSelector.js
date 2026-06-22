@@ -1,8 +1,9 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { COLORS, SIZES } from "../constants/theme";
+import { SIZES, useTheme } from "../constants/theme";
 
 export default function TypeSelector({ type, setType }) {
+    const { colors: COLORS } = useTheme();
     const isLostActive = type === "LOST";
     const isFoundActive = type === "FOUND";
 
@@ -13,12 +14,12 @@ export default function TypeSelector({ type, setType }) {
                 activeOpacity={0.8}
                 style={[
                     styles.selectorBtn,
-                    isLostActive ? styles.activeLost : styles.inactive,
+                    isLostActive ? { backgroundColor: COLORS.lost, borderColor: COLORS.lost } : { backgroundColor: COLORS.innerBoxBg, borderColor: COLORS.border },
                 ]}
                 onPress={() => setType("LOST")}
             >
-                <Text style={[styles.btnText, isLostActive ? styles.textActive : styles.textInactive]}>
-                    🚨 I LOST SOMETHING
+                <Text style={[styles.btnText, isLostActive ? { color: COLORS.white } : { color: COLORS.textSecondary }]}>
+                    🚨 LOST
                 </Text>
             </TouchableOpacity>
 
@@ -27,12 +28,12 @@ export default function TypeSelector({ type, setType }) {
                 activeOpacity={0.8}
                 style={[
                     styles.selectorBtn,
-                    isFoundActive ? styles.activeFound : styles.inactive,
+                    isFoundActive ? { backgroundColor: COLORS.found, borderColor: COLORS.found } : { backgroundColor: COLORS.innerBoxBg, borderColor: COLORS.border },
                 ]}
                 onPress={() => setType("FOUND")}
             >
-                <Text style={[styles.btnText, isFoundActive ? styles.textActive : styles.textInactive]}>
-                    ✅ I FOUND SOMETHING
+                <Text style={[styles.btnText, isFoundActive ? { color: COLORS.white } : { color: COLORS.textSecondary }]}>
+                    ✅ FOUND
                 </Text>
             </TouchableOpacity>
         </View>
@@ -53,27 +54,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderWidth: 1,
     },
-    activeLost: {
-        backgroundColor: COLORS.lost,
-        borderColor: COLORS.lost,
-    },
-    activeFound: {
-        backgroundColor: COLORS.found,
-        borderColor: COLORS.found,
-    },
-    inactive: {
-        backgroundColor: "#F1F5F9",
-        borderColor: COLORS.border,
-    },
     btnText: {
-        fontSize: 12,
+        fontSize: 13,
         fontWeight: "700",
         letterSpacing: 0.5,
-    },
-    textActive: {
-        color: COLORS.white,
-    },
-    textInactive: {
-        color: COLORS.textSecondary,
     },
 });

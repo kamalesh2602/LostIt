@@ -5,7 +5,7 @@ import {
     FlatList,
     StyleSheet,
 } from "react-native";
-import { COLORS, SIZES } from "../constants/theme";
+import { SIZES, useTheme } from "../constants/theme"; // Import useTheme hook
 import ItemCard from "../components/ItemCard";
 
 export default function SearchScreen({
@@ -17,17 +17,19 @@ export default function SearchScreen({
     confirmDelete,
     getTimeAgo,
 }) {
+    const { colors: COLORS } = useTheme(); // Consumes the live dark/light context state
+
     return (
         <View style={styles.container}>
             {/* Styled Search Input Bar Container */}
             <View style={styles.searchBarWrapper}>
                 <TextInput
-                    style={styles.searchInput}
+                    style={[styles.searchInput, { backgroundColor: COLORS.cardBg, borderColor: COLORS.border, color: COLORS.textPrimary }]}
                     placeholder="🔍 Search items by name or keywords..."
                     placeholderTextColor={COLORS.textMuted}
                     value={search}
                     onChangeText={setSearch}
-                    clearButtonMode="while-editing" // Adds a native clear button on iOS
+                    clearButtonMode="while-editing"
                     autoCorrect={false}
                 />
             </View>
@@ -62,17 +64,14 @@ const styles = StyleSheet.create({
         marginTop: SIZES.base,
     },
     searchInput: {
-        backgroundColor: COLORS.cardBg,
         borderRadius: SIZES.radiusMedium,
         paddingHorizontal: 16,
         paddingVertical: 14,
         fontSize: SIZES.font,
-        color: COLORS.textPrimary,
         borderWidth: 1,
-        borderColor: COLORS.border,
     },
     listContainer: {
         paddingHorizontal: SIZES.medium,
-        paddingBottom: 140, // Keeps bottom items fully visible above the BottomNav panel
+        paddingBottom: 140,
     },
 });

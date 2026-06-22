@@ -1,41 +1,32 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "../constants/theme";
+import { SIZES, SHADOWS, useTheme } from "../constants/theme";
 
 export default function StatsCard({ items = [] }) {
+    const { colors: COLORS } = useTheme(); // Dynamic theme context engine hook
+    
     const lostCount = items.filter((i) => i.type === "LOST").length;
     const foundCount = items.filter((i) => i.type === "FOUND").length;
 
     return (
-        <View style={styles.container}>
-            {/* Total Items Grid Block */}
+        <View style={[styles.container, { backgroundColor: COLORS.cardBg, borderColor: COLORS.border }]}>
             <View style={styles.statBox}>
-                <Text style={[styles.statValue, { color: COLORS.primary }]}>
-                    {items.length}
-                </Text>
-                <Text style={styles.statLabel}>Total Posts</Text>
+                <Text style={[styles.statValue, { color: COLORS.primary }]}>{items.length}</Text>
+                <Text style={[styles.statLabel, { color: COLORS.textSecondary }]}>Total Posts</Text>
             </View>
-
-            {/* Vertical Divider */}
-            <View style={styles.divider} />
-
-            {/* Lost Items Grid Block */}
+            
+            <View style={[styles.divider, { backgroundColor: COLORS.border }]} />
+            
             <View style={styles.statBox}>
-                <Text style={[styles.statValue, { color: COLORS.lost }]}>
-                    {lostCount}
-                </Text>
-                <Text style={styles.statLabel}>Lost Items</Text>
+                <Text style={[styles.statValue, { color: COLORS.lost }]}>{lostCount}</Text>
+                <Text style={[styles.statLabel, { color: COLORS.textSecondary }]}>Lost Items</Text>
             </View>
-
-            {/* Vertical Divider */}
-            <View style={styles.divider} />
-
-            {/* Found Items Grid Block */}
+            
+            <View style={[styles.divider, { backgroundColor: COLORS.border }]} />
+            
             <View style={styles.statBox}>
-                <Text style={[styles.statValue, { color: COLORS.found }]}>
-                    {foundCount}
-                </Text>
-                <Text style={styles.statLabel}>Found Items</Text>
+                <Text style={[styles.statValue, { color: COLORS.found }]}>{foundCount}</Text>
+                <Text style={[styles.statLabel, { color: COLORS.textSecondary }]}>Found Items</Text>
             </View>
         </View>
     );
@@ -44,13 +35,13 @@ export default function StatsCard({ items = [] }) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
-        backgroundColor: COLORS.cardBg,
         borderRadius: SIZES.radiusLarge,
         paddingVertical: SIZES.medium,
         paddingHorizontal: SIZES.small,
         marginBottom: SIZES.medium,
         alignItems: "center",
         justifyContent: "space-between",
+        borderWidth: 1,
         ...SHADOWS.light,
     },
     statBox: {
@@ -66,11 +57,9 @@ const styles = StyleSheet.create({
     statLabel: {
         fontSize: SIZES.small,
         fontWeight: "600",
-        color: COLORS.textSecondary,
     },
     divider: {
         width: 1,
         height: "60%",
-        backgroundColor: COLORS.border,
     },
 });

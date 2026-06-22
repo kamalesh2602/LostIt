@@ -6,7 +6,7 @@ import {
     StyleSheet,
     View,
     SafeAreaView,
-    Platform,
+    Platform
 } from "react-native";
 
 import * as ImagePicker from "expo-image-picker";
@@ -23,9 +23,9 @@ import StatsCard from "./src/components/StatsCard";
 import useItems from "./src/hooks/useItems";
 import MatchesScreen from "./src/screens/MatchesScreen";
 import { getTimeAgo } from "./src/utils/timeAgo";
-import { SIZES, COLORS } from "./src/constants/theme";
+import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme"; // Import Theme Utilities
 
-export default function App() {
+function MainAppContent() {
     const [screen, setScreen] = useState("feed");
     const [title, setTitle] = useState("");
     const [location, setLocation] = useState("");
@@ -49,6 +49,9 @@ export default function App() {
         markClaimed,
         deleteItem,
     } = useItems();
+
+    // Consume dynamic theme parameters
+    const { colors, isDarkMode } = useTheme();
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -119,30 +122,30 @@ export default function App() {
         return item.type === filter || item.status === filter;
     });
 
-    // Loading State with a Soft Minimalist Light Theme
     if (loading) {
         return (
-            <View style={[styles.mainContainer, styles.centerContainer]}>
-                <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} translucent />
-                <Text style={styles.loadingTitle}>Waking up server...</Text>
-                <Text style={styles.loadingSubtitle}>This may take a few seconds</Text>
+            <View style={[styles.mainContainer, { backgroundColor: colors.background }, styles.centerContainer]}>
+                <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor={colors.background} translucent />
+                <Text style={[styles.loadingTitle, { color: colors.textPrimary }]}>Waking up server...</Text>
+                <Text style={[styles.loadingSubtitle, { color: colors.textSecondary }]}>This may take a few seconds</Text>
             </View>
         );
     }
     
     return (
-        <SafeAreaView style={styles.mainContainer}>
-            {/* Dark status indicators over our clean, light canvas background */}
-            <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} translucent={false} />
+        <SafeAreaView style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+            <StatusBar 
+                barStyle={isDarkMode ? "light-content" : "dark-content"} 
+                backgroundColor={colors.background} 
+                translucent={false} 
+            />
 
-            {/* Application Brand Header */}
             {screen !== "about" && (
                 <View style={styles.headerWrapper}>
-                    <Text style={styles.brandTitle}>LostIt</Text>
+                    <Text style={[styles.brandTitle, { color: colors.primary }]}>LostIt</Text>
                 </View>
             )}
 
-            {/* Dynamic Screen Architecture Switch */}
             {screen === "feed" && (
                 <View style={styles.screenFlexWrapper}>
                     <View style={styles.paddedHeaderElements}>
@@ -208,17 +211,24 @@ export default function App() {
                 <AboutScreen />
             )}
 
-            {/* Global Sticky Bottom Navigation overlay component */}
             <BottomNav screen={screen} setScreen={setScreen} />
         </SafeAreaView>
+    );
+}
+
+// Main shell component wrapping with Provider
+export default function App() {
+    return (
+        <ThemeProvider>
+            <MainAppContent />
+        </ThemeProvider>
     );
 }
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: COLORS.background || "#F8FAFC",
-        // Platform.select dynamically pushes content safely past Android's status bar height boundary
+        // Dynamic padding injection handles hardware notches safely
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0, 
     },
     centerContainer: {
@@ -230,11 +240,10 @@ const styles = StyleSheet.create({
     },
     headerWrapper: {
         paddingHorizontal: SIZES.medium,
-        marginTop: 10, // Gives the logo breathing room below the system indicators
+        marginTop: 10,
         marginBottom: SIZES.small,
     },
     brandTitle: {
-        color: COLORS.primary || "#007AFF",
         fontSize: 32,
         fontWeight: "900",
         letterSpacing: -1,
@@ -243,12 +252,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: SIZES.medium,
     },
     loadingTitle: {
-        color: COLORS.textPrimary || "#0F172A",
         fontSize: 20,
         fontWeight: "700",
     },
     loadingSubtitle: {
-        color: COLORS.textSecondary || "#475569",
         marginTop: 8,
         fontSize: 14,
     },
