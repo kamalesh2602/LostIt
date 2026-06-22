@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import {
-    Alert, 
+    Alert,
     Text,
-    StatusBar, // Imported to handle phone indicator theme overrides
+    StatusBar,
     StyleSheet,
     View,
-    SafeAreaView
+    SafeAreaView,
+    Platform,
 } from "react-native";
 
-import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 
 import FeedScreen from "./src/screens/FeedScreen";
@@ -23,7 +23,7 @@ import StatsCard from "./src/components/StatsCard";
 import useItems from "./src/hooks/useItems";
 import MatchesScreen from "./src/screens/MatchesScreen";
 import { getTimeAgo } from "./src/utils/timeAgo";
-import { SIZES } from "./src/constants/theme";
+import { SIZES, COLORS } from "./src/constants/theme";
 
 export default function App() {
     const [screen, setScreen] = useState("feed");
@@ -43,6 +43,7 @@ export default function App() {
         items,
         ownedItems,
         refreshing,
+        loading,
         onRefresh,
         addItem,
         markClaimed,
@@ -118,22 +119,30 @@ export default function App() {
         return item.type === filter || item.status === filter;
     });
 
+    // Loading State with a Soft Minimalist Light Theme
+    if (loading) {
+        return (
+            <View style={[styles.mainContainer, styles.centerContainer]}>
+                <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} translucent />
+                <Text style={styles.loadingTitle}>Waking up server...</Text>
+                <Text style={styles.loadingSubtitle}>This may take a few seconds</Text>
+            </View>
+        );
+    }
+    
     return (
-        <LinearGradient
-            colors={["#0f172a", "#1e293b", "#312e81"]}
-            style={styles.gradientContainer}
-        >
-            {/* Forces phone clock, battery, and cellular indicators to render crisp white */}
-            <StatusBar barStyle="light-content" backgroundColor="#0f172a" translucent />
+        <SafeAreaView style={styles.mainContainer}>
+            {/* Dark status indicators over our clean, light canvas background */}
+            <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} translucent={false} />
 
-            {/* Application Brand Header View Box */}
+            {/* Application Brand Header */}
             {screen !== "about" && (
                 <View style={styles.headerWrapper}>
                     <Text style={styles.brandTitle}>LostIt</Text>
                 </View>
             )}
 
-            {/* Dynamic Screen View Switching Modules */}
+            {/* Dynamic Screen Architecture Switch */}
             {screen === "feed" && (
                 <View style={styles.screenFlexWrapper}>
                     <View style={styles.paddedHeaderElements}>
@@ -199,31 +208,48 @@ export default function App() {
                 <AboutScreen />
             )}
 
-            {/* Persistent Global Floating Overlay Menu */}
+            {/* Global Sticky Bottom Navigation overlay component */}
             <BottomNav screen={screen} setScreen={setScreen} />
-        </LinearGradient>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    gradientContainer: {
+    mainContainer: {
         flex: 1,
-        paddingTop: 50, // Perfected placement gap under native hardware status bar bars
+        backgroundColor: COLORS.background || "#F8FAFC",
+        // Platform.select dynamically pushes content safely past Android's status bar height boundary
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0, 
+    },
+    centerContainer: {
+        justifyContent: "center",
+        alignItems: "center",
     },
     screenFlexWrapper: {
         flex: 1,
     },
     headerWrapper: {
         paddingHorizontal: SIZES.medium,
+        marginTop: 10, // Gives the logo breathing room below the system indicators
         marginBottom: SIZES.small,
     },
     brandTitle: {
-        color: "white",
+        color: COLORS.primary || "#007AFF",
         fontSize: 32,
         fontWeight: "900",
-        letterSpacing: -0.5,
+        letterSpacing: -1,
     },
     paddedHeaderElements: {
         paddingHorizontal: SIZES.medium,
+    },
+    loadingTitle: {
+        color: COLORS.textPrimary || "#0F172A",
+        fontSize: 20,
+        fontWeight: "700",
+    },
+    loadingSubtitle: {
+        color: COLORS.textSecondary || "#475569",
+        marginTop: 8,
+        fontSize: 14,
     },
 });

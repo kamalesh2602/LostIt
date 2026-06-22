@@ -10,10 +10,10 @@ import {
 
 export default function useItems() {
   const [items, setItems] = useState([]);
-  const [ownedItems, setOwnedItems] =
-    useState({});
-  const [refreshing, setRefreshing] =
-    useState(false);
+  const [ownedItems, setOwnedItems] = useState({});
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     loadItems();
@@ -21,8 +21,7 @@ export default function useItems() {
 
   const loadItems = async () => {
     try {
-      const data =
-        await getItems();
+      const data = await getItems();
 
       const ownershipMap = {};
 
@@ -36,15 +35,17 @@ export default function useItems() {
           !!token;
       }
 
-      setOwnedItems(
-        ownershipMap
-      );
+      setOwnedItems(ownershipMap);
       setItems(data);
+
+      setLoading(false);
     } catch (err) {
       console.error(
         "Failed to load items:",
         err
       );
+
+      setTimeout(loadItems, 5000);
     }
   };
 
@@ -100,6 +101,7 @@ export default function useItems() {
     items,
     ownedItems,
     refreshing,
+    loading,
     loadItems,
     onRefresh,
     addItem,
