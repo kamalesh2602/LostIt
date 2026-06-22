@@ -1,25 +1,36 @@
 // src/constants/theme.js
+import React, { createContext, useContext, useState } from 'react';
 
-export const COLORS = {
-  // Brand Colors
-  primary: '#1E3A8A',       // Deep Trust Blue for headers / primary actions
-  background: '#0F172A',    // Dark Navy/Slate background matching your app's current top bar
-  cardBg: '#FFFFFF',        // Pure White for contrast containers
-  
-  // Status Colors
-  lost: '#EF4444',          // Vibrant Red for Lost status
-  found: '#10B981',         // Emerald Green for Found status
-  claimed: '#6B7280',       // Muted Gray for Claimed status
-  
-  // UI Elements
-  textPrimary: '#1F2937',   // Near black for high legibility on white cards
-  textSecondary: '#6B7280', // Medium gray for secondary text/subtitles
-  textMuted: '#9CA3AF',     // Light gray for placeholders
-  border: '#E5E7EB',        // Clean light border color
-  
-  // Action Elements
-  buttonBlue: '#3B82F6',    // Bright blue for "Find Matches" or primary buttons
+export const LIGHT_COLORS = {
+  primary: '#007AFF',       
+  background: '#F8FAFC',    
+  cardBg: '#FFFFFF',        
+  border: '#E2E8F0',        
+  textPrimary: '#0F172A',   
+  textSecondary: '#475569', 
+  textMuted: '#94A3B8',     
+  buttonBlue: '#007AFF',    
+  lost: '#EF4444',          
+  found: '#22C55E',         
+  claimed: '#64748B',       
   white: '#FFFFFF',
+  innerBoxBg: '#F1F5F9',
+};
+
+export const DARK_COLORS = {
+  primary: '#3B82F6',       // Brighter blue for accessible contrast on dark screens
+  background: '#0F172A',    // Deep dark slate canvas
+  cardBg: '#1E293B',        // Sleek navy slate for card modules
+  border: '#334155',        // Soft border lines for dark surfaces
+  textPrimary: '#F8FAFC',   // Clean off-white for main titles
+  textSecondary: '#94A3B8', // Muted slate gray for text descriptions
+  textMuted: '#64748B',     // Placeholder gray
+  buttonBlue: '#3B82F6',    
+  lost: '#EF4444',          
+  found: '#22C55E',         
+  claimed: '#64748B',       
+  white: '#FFFFFF',
+  innerBoxBg: '#0F172A',
 };
 
 export const SIZES = {
@@ -27,26 +38,50 @@ export const SIZES = {
   small: 12,
   font: 14,
   medium: 16,
-  large: 18,
-  extraLarge: 24,
-  radiusSmall: 8,
-  radiusMedium: 12,
-  radiusLarge: 16,
+  large: 20,
+  extraLarge: 26,
+  radiusSmall: 10,
+  radiusMedium: 16,         
+  radiusLarge: 24,
 };
 
 export const SHADOWS = {
   light: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2, // Android
+    elevation: 2,
   },
   medium: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4, // Android
+    shadowRadius: 12,
+    elevation: 4,
   },
 };
+
+// --- THEME CONTEXT SYSTEM ---
+const ThemeContext = createContext();
+
+export function ThemeProvider({ children }) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  const colors = isDarkMode ? DARK_COLORS : LIGHT_COLORS;
+
+  return (
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, colors }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+// Custom hook so your components can access the global active theme settings
+export function useTheme() {
+  return useContext(ThemeContext);
+}
+
+// Keep this fallback export so nothing crashes during setup
+export const COLORS = LIGHT_COLORS;

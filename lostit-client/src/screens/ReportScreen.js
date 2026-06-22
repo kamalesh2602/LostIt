@@ -8,7 +8,7 @@ import {
     Image,
     StyleSheet,
 } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "../constants/theme";
+import { SIZES, SHADOWS, useTheme } from "../constants/theme";
 import TypeSelector from "../components/TypeSelector";
 import CategorySelector from "../components/CategorySelector";
 
@@ -29,39 +29,41 @@ export default function ReportScreen({
     pickImage,
     addItem,
 }) {
+    const { colors: COLORS, isDarkMode } = useTheme();
+
     return (
         <ScrollView 
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContainer}
         >
-            <View style={styles.formContainer}>
-                <Text style={styles.formHeaderTitle}>Report New Item</Text>
+            <View style={[styles.formContainer, { backgroundColor: COLORS.cardBg, borderColor: COLORS.border }]}>
+                <Text style={[styles.formHeaderTitle, { color: COLORS.textPrimary }]}>Report New Item</Text>
 
                 {/* Interactive Status Switch Module */}
                 <TypeSelector type={type} setType={setType} />
 
                 {/* Form Input Fields Stack */}
-                <Text style={styles.fieldLabel}>Item Name</Text>
+                <Text style={[styles.fieldLabel, { color: COLORS.textSecondary }]}>Item Name</Text>
                 <TextInput
-                    style={styles.inputField}
+                    style={[styles.inputField, { backgroundColor: COLORS.innerBoxBg, borderColor: COLORS.border, color: COLORS.textPrimary }]}
                     placeholder="What did you lose or find?"
                     placeholderTextColor={COLORS.textMuted}
                     value={title}
                     onChangeText={setTitle}
                 />
 
-                <Text style={styles.fieldLabel}>Location</Text>
+                <Text style={[styles.fieldLabel, { color: COLORS.textSecondary }]}>Location</Text>
                 <TextInput
-                    style={styles.inputField}
+                    style={[styles.inputField, { backgroundColor: COLORS.innerBoxBg, borderColor: COLORS.border, color: COLORS.textPrimary }]}
                     placeholder="e.g., F block Canteen, Room 302"
                     placeholderTextColor={COLORS.textMuted}
                     value={location}
                     onChangeText={setLocation}
                 />
 
-                <Text style={styles.fieldLabel}>Contact Number</Text>
+                <Text style={[styles.fieldLabel, { color: COLORS.textSecondary }]}>Contact Number</Text>
                 <TextInput
-                    style={styles.inputField}
+                    style={[styles.inputField, { backgroundColor: COLORS.innerBoxBg, borderColor: COLORS.border, color: COLORS.textPrimary }]}
                     placeholder="Enter active phone number"
                     placeholderTextColor={COLORS.textMuted}
                     keyboardType="phone-pad"
@@ -69,9 +71,9 @@ export default function ReportScreen({
                     onChangeText={setContact}
                 />
 
-                <Text style={styles.fieldLabel}>Description</Text>
+                <Text style={[styles.fieldLabel, { color: COLORS.textSecondary }]}>Description</Text>
                 <TextInput
-                    style={[styles.inputField, styles.textAreaField]}
+                    style={[styles.inputField, styles.textAreaField, { backgroundColor: COLORS.innerBoxBg, borderColor: COLORS.border, color: COLORS.textPrimary }]}
                     placeholder="Add details like color, brand, distinct marks..."
                     placeholderTextColor={COLORS.textMuted}
                     multiline
@@ -81,12 +83,12 @@ export default function ReportScreen({
                 />
 
                 {/* Category Selection Carousel Module */}
-                <Text style={styles.fieldLabel}>Select Category</Text>
+                <Text style={[styles.fieldLabel, { color: COLORS.textSecondary }]}>Select Category</Text>
                 <CategorySelector category={category} setCategory={setCategory} />
 
                 {/* Media Presentation Display Container */}
                 {image && (
-                    <View style={styles.imagePreviewContainer}>
+                    <View style={[styles.imagePreviewContainer, { borderColor: COLORS.border }]}>
                         <Image source={{ uri: image }} style={styles.uploadedImage} />
                     </View>
                 )}
@@ -94,10 +96,13 @@ export default function ReportScreen({
                 {/* Functional Upload Control Element */}
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.uploadButton}
+                    style={[
+                        styles.uploadButton, 
+                        isDarkMode ? { backgroundColor: '#2D2510', borderColor: '#F59E0B' } : { backgroundColor: "#FEF3C7", borderColor: "#F59E0B" }
+                    ]}
                     onPress={pickImage}
                 >
-                    <Text style={styles.uploadButtonText}>
+                    <Text style={[styles.uploadButtonText, isDarkMode ? { color: '#FBBF24' } : { color: "#B45309" }]}>
                         {image ? "🔄 Change Photo" : "📷 Upload Item Image"}
                     </Text>
                 </TouchableOpacity>
@@ -105,10 +110,10 @@ export default function ReportScreen({
                 {/* Main Action Submit Button */}
                 <TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.submitButton}
+                    style={[styles.submitButton, { backgroundColor: COLORS.primary }]}
                     onPress={addItem}
                 >
-                    <Text style={styles.submitButtonText}>Publish Report</Text>
+                    <Text style={[styles.submitButtonText, { color: COLORS.white }]}>Publish Report</Text>
                 </TouchableOpacity>
             </View>
         </ScrollView>
@@ -119,18 +124,17 @@ const styles = StyleSheet.create({
     scrollContainer: {
         paddingHorizontal: SIZES.medium,
         paddingTop: SIZES.small,
-        paddingBottom: 150, // Extra breathing space above BottomNav
+        paddingBottom: 150, 
     },
     formContainer: {
-        backgroundColor: COLORS.cardBg,
         borderRadius: SIZES.radiusLarge,
-        padding: SIZES.medium + 4, // Increased internal padding for breathing room
+        padding: SIZES.medium + 4, 
+        borderWidth: 1,
         ...SHADOWS.medium,
     },
     formHeaderTitle: {
         fontSize: 24,
         fontWeight: "800",
-        color: COLORS.textPrimary,
         marginBottom: SIZES.large,
         textAlign: "center",
         letterSpacing: -0.5,
@@ -138,25 +142,21 @@ const styles = StyleSheet.create({
     fieldLabel: {
         fontSize: 13,
         fontWeight: "700",
-        color: COLORS.textSecondary,
-        textTransform: "uppercase", // Clean, subtle developer label styling
+        textTransform: "uppercase", 
         letterSpacing: 0.6,
         marginBottom: 6,
         marginTop: 6,
     },
     inputField: {
-        backgroundColor: "#F8FAFC",
         borderWidth: 1,
-        borderColor: "#E2E8F0",
         borderRadius: SIZES.radiusMedium,
         paddingHorizontal: 16,
         paddingVertical: 14,
         fontSize: SIZES.font,
-        color: COLORS.textPrimary,
         marginBottom: SIZES.medium,
     },
     textAreaField: {
-        height: 100, // Slightly taller text box for better multi-line viewing
+        height: 100, 
         textAlignVertical: "top",
     },
     imagePreviewContainer: {
@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
         overflow: "hidden",
         marginVertical: SIZES.medium,
         borderWidth: 1,
-        borderColor: COLORS.border,
         ...SHADOWS.light,
     },
     uploadedImage: {
@@ -172,31 +171,23 @@ const styles = StyleSheet.create({
         height: 190,
         resizeMode: "cover",
     },
-    
-    // Modernized Media Upload Button (Sleek Border Style)
     uploadButton: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#FEF3C7", // Very soft, premium amber highlight background tint
         borderWidth: 1.5,
-        borderColor: "#F59E0B",
-        borderStyle: "dashed", // Dashed layout border line suggests an action area drop-zone
+        borderStyle: "dashed", 
         borderRadius: SIZES.radiusMedium,
         paddingVertical: 14,
         marginTop: SIZES.base,
-        marginBottom: SIZES.large, // Increased spacing separation between form actions
+        marginBottom: SIZES.large, 
     },
     uploadButtonText: {
-        color: "#B45309", // High contrast dark amber font text
         fontWeight: "700",
         fontSize: SIZES.font,
         letterSpacing: 0.3,
     },
-    
-    // Modernized Main CTA Action Submit Button
     submitButton: {
-        backgroundColor: COLORS.primary,
         paddingVertical: 16,
         borderRadius: SIZES.radiusMedium,
         alignItems: "center",
@@ -204,10 +195,8 @@ const styles = StyleSheet.create({
         ...SHADOWS.medium,
     },
     submitButtonText: {
-        color: COLORS.white,
         fontWeight: "800",
         fontSize: SIZES.medium,
         letterSpacing: 0.5,
     },
-    
 });

@@ -1,30 +1,26 @@
+
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "../constants/theme";
+import { SIZES, SHADOWS, useTheme } from "../constants/theme"; // Updated
 
-export default function FilterBar({
-    filter,
-    setFilter,
-    showMine,
-    setShowMine,
-}) {
+export default function FilterBar({ filter, setFilter, showMine, setShowMine }) {
+    const { colors: COLORS } = useTheme(); // ⬅️ Added
+
     return (
         <View style={styles.container}>
-            {/* Horizontal Filter Pill Row */}
             <View style={styles.pillRow}>
                 {["ALL", "LOST", "FOUND", "CLAIMED"].map((item) => {
                     const isActive = filter === item;
                     return (
                         <TouchableOpacity
                             key={item}
-                            activeOpacity={0.7}
                             style={[
                                 styles.pill,
-                                isActive ? styles.pillActive : styles.pillInactive,
+                                isActive ? { backgroundColor: COLORS.buttonBlue } : { backgroundColor: COLORS.innerBoxBg },
                             ]}
                             onPress={() => setFilter(item)}
                         >
-                            <Text style={[styles.pillText, isActive ? styles.textActive : styles.textInactive]}>
+                            <Text style={[styles.pillText, isActive ? { color: COLORS.white } : { color: COLORS.textSecondary }]}>
                                 {item}
                             </Text>
                         </TouchableOpacity>
@@ -32,16 +28,14 @@ export default function FilterBar({
                 })}
             </View>
 
-            {/* My Posts Toggle Control */}
             <TouchableOpacity
-                activeOpacity={0.8}
                 style={[
                     styles.toggleButton,
-                    showMine ? styles.toggleActive : styles.toggleInactive,
+                    showMine ? { backgroundColor: "#D97706", borderColor: "#D97706" } : { backgroundColor: 'transparent', borderColor: COLORS.border },
                 ]}
                 onPress={() => setShowMine(!showMine)}
             >
-                <Text style={[styles.toggleText, showMine ? styles.toggleTextActive : styles.toggleTextInactive]}>
+                <Text style={[styles.toggleText, showMine ? { color: COLORS.white } : { color: COLORS.textSecondary }]}>
                     {showMine ? "✨ SHOWING MY POSTS" : "👤 VIEW MY POSTS"}
                 </Text>
             </TouchableOpacity>

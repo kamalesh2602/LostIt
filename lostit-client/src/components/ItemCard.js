@@ -8,7 +8,7 @@ import {
     Alert,
     StyleSheet,
 } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "../constants/theme";
+import { SIZES, SHADOWS, useTheme } from "../constants/theme";
 import { getMatches, getMatchCount } from "../services/api";
 
 export default function ItemCard({
@@ -20,6 +20,9 @@ export default function ItemCard({
     setMatches,
     setScreen,
 }) {
+    // Intercept active theme settings and locally map it to uppercase COLORS 
+    // to match all inline definitions safely!
+    const { colors: COLORS } = useTheme(); 
     const [matchCount, setMatchCount] = useState(0);
 
     useEffect(() => {
@@ -49,7 +52,7 @@ export default function ItemCard({
     const isOwner = ownedItems[item._id];
 
     return (
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: COLORS.cardBg, borderColor: COLORS.border }]}>
             {/* Header Layout: Type Badge & Active Status */}
             <View style={styles.headerRow}>
                 <View style={[styles.badge, { backgroundColor: isLost ? COLORS.lost : COLORS.found }]}>
@@ -58,7 +61,7 @@ export default function ItemCard({
                 
                 <View style={styles.statusContainer}>
                     <View style={[styles.statusDot, { backgroundColor: item.status === "CLAIMED" ? COLORS.claimed : '#22c55e' }]} />
-                    <Text style={styles.statusText}>
+                    <Text style={[styles.statusText, { color: COLORS.textSecondary }]}>
                         {item.status === "CLAIMED" ? "CLAIMED" : "ACTIVE"}
                     </Text>
                 </View>
@@ -71,35 +74,39 @@ export default function ItemCard({
 
             {/* Content Specifications */}
             <View style={styles.contentBody}>
-                <Text style={styles.categoryText}>🏷️ {item.category}</Text>
-                <Text style={styles.titleText}>{item.title}</Text>
-                <Text style={styles.locationText}>📍 {item.location}</Text>
+                <Text style={[styles.categoryText, { color: COLORS.primary }]}>🏷️ {item.category}</Text>
+                
+                {/* FIXED: Explicitly tied to dynamic text color token to strip white text overrides */}
+                <Text style={[styles.titleText, { color: COLORS.textPrimary }]}>
+                    {item.title}
+                </Text>
+                
+                <Text style={[styles.locationText, { color: COLORS.textSecondary }]}>📍 {item.location}</Text>
                 
                 {item.description ? (
-                    <Text style={styles.descriptionText} numberOfLines={2}>
+                    <Text style={[styles.descriptionText, { color: COLORS.textSecondary, backgroundColor: COLORS.innerBoxBg }]} numberOfLines={2}>
                         {item.description}
                     </Text>
                 ) : null}
 
                 {/* Meta Row: Time & Contacts */}
-                <View style={styles.metaRow}>
-                    <Text style={styles.timeText}>⏱️ {getTimeAgo(item.createdAt)}</Text>
+                <View style={[styles.metaRow, { borderTopColor: COLORS.border }]}>
+                    <Text style={[styles.timeText, { color: COLORS.textMuted }]}>⏱️ {getTimeAgo(item.createdAt)}</Text>
                     
                     <TouchableOpacity 
                         onPress={() => Linking.openURL(`tel:${item.contact}`)}
                         style={styles.contactLink}
                     >
-                        <Text style={styles.contactLinkText}>📞 Call Finder</Text>
+                        <Text style={[styles.contactLinkText, { color: COLORS.primary }]}>📞 Call Finder</Text>
                     </TouchableOpacity>
                 </View>
             </View>
 
             {/* Operational Layout Actions */}
             <View style={styles.actionSection}>
-                {/* AI / RAG Match Verification Module */}
                 <TouchableOpacity 
                     onPress={showMatches} 
-                    style={[styles.matchButton, { borderColor: matchCount > 0 ? '#16a34a' : COLORS.border }]}
+                    style={[styles.matchButton, { backgroundColor: COLORS.innerBoxBg, borderColor: matchCount > 0 ? '#16a34a' : COLORS.border }]}
                 >
                     <Text style={[styles.matchButtonText, { color: matchCount > 0 ? '#16a34a' : COLORS.textSecondary }]}>
                         🔍 {matchCount} {matchCount === 1 ? "Match" : "Matches"} Found
@@ -108,7 +115,7 @@ export default function ItemCard({
 
                 {/* Owner Privileges Dashboard Controls */}
                 {isOwner && (
-                    <View style={styles.ownerControls}>
+                    <View style={[styles.ownerControls, { borderTopColor: COLORS.border }]}>
                         <View style={styles.ownerHeader}>
                             <Text style={styles.ownerTag}>⭐ Your Post</Text>
                         </View>
@@ -116,14 +123,14 @@ export default function ItemCard({
                         <View style={styles.ownerActionRow}>
                             {item.status !== "CLAIMED" && (
                                 <TouchableOpacity 
-                                    style={[styles.btn, styles.btnClaim]} 
+                                    style={[styles.btn, styles.btnClaim, { backgroundColor: COLORS.found }]} 
                                     onPress={() => markClaimed(item._id)}
                                 >
                                     <Text style={styles.btnText}>Mark Claimed</Text>
                                 </TouchableOpacity>
                             )}
                             <TouchableOpacity 
-                                style={[styles.btn, styles.btnDelete]} 
+                                style={[styles.btn, styles.btnDelete, { backgroundColor: COLORS.lost }]} 
                                 onPress={() => confirmDelete(item._id)}
                             >
                                 <Text style={styles.btnText}>Delete</Text>
@@ -138,15 +145,14 @@ export default function ItemCard({
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: COLORS.cardBg,
         borderRadius: SIZES.radiusLarge,
         padding: SIZES.medium,
         marginBottom: SIZES.medium,
+        borderWidth: 1,
         ...SHADOWS.medium,
     },
     headerRow: {
         flexDirection: "row",
-        justifyContent: "between",
         justifyContent: "space-between",
         alignItems: "center",
         marginBottom: SIZES.small,
@@ -157,7 +163,7 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.radiusSmall,
     },
     badgeText: {
-        color: COLORS.white,
+        color: '#FFFFFF',
         fontWeight: "700",
         fontSize: SIZES.small,
         letterSpacing: 0.5,
@@ -175,7 +181,6 @@ const styles = StyleSheet.create({
     statusText: {
         fontSize: SIZES.small,
         fontWeight: "600",
-        color: COLORS.textSecondary,
     },
     cardImage: {
         width: "100%",
@@ -187,7 +192,6 @@ const styles = StyleSheet.create({
         marginBottom: SIZES.small,
     },
     categoryText: {
-        color: COLORS.buttonBlue,
         fontWeight: "600",
         fontSize: SIZES.small,
         textTransform: "uppercase",
@@ -196,19 +200,15 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 20,
         fontWeight: "700",
-        color: COLORS.textPrimary,
         marginBottom: 4,
     },
     locationText: {
         fontSize: SIZES.font,
-        color: COLORS.textSecondary,
         marginBottom: SIZES.base,
     },
     descriptionText: {
         fontSize: SIZES.font,
-        color: COLORS.textSecondary,
         fontStyle: "italic",
-        backgroundColor: "#F8FAFC",
         padding: SIZES.base,
         borderRadius: SIZES.radiusSmall,
         marginBottom: SIZES.base,
@@ -218,19 +218,16 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         borderTopWidth: 1,
-        borderTopColor: "#F1F5F9",
         paddingTop: SIZES.base,
         marginTop: 4,
     },
     timeText: {
         fontSize: SIZES.small,
-        color: COLORS.textMuted,
     },
     contactLink: {
         paddingVertical: 4,
     },
     contactLinkText: {
-        color: COLORS.primary,
         fontWeight: "600",
         fontSize: SIZES.font,
     },
@@ -242,7 +239,6 @@ const styles = StyleSheet.create({
         borderRadius: SIZES.radiusMedium,
         paddingVertical: 10,
         alignItems: "center",
-        backgroundColor: "#FAFAFA",
     },
     matchButtonText: {
         fontWeight: "700",
@@ -252,7 +248,6 @@ const styles = StyleSheet.create({
         marginTop: SIZES.medium,
         paddingTop: SIZES.medium,
         borderTopWidth: 1,
-        borderTopColor: COLORS.border,
     },
     ownerHeader: {
         marginBottom: SIZES.base,
@@ -273,14 +268,8 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-    btnClaim: {
-        backgroundColor: COLORS.found,
-    },
-    btnDelete: {
-        backgroundColor: COLORS.lost,
-    },
     btnText: {
-        color: COLORS.white,
+        color: '#FFFFFF',
         fontWeight: "700",
         fontSize: SIZES.font,
     },

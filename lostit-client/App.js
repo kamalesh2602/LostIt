@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import {
-    Alert, 
+    Alert,
     Text,
-    StatusBar, // Imported to handle phone indicator theme overrides
+    StatusBar,
     StyleSheet,
     View,
-    SafeAreaView
+    SafeAreaView,
+    Platform
 } from "react-native";
 
-import { LinearGradient } from "expo-linear-gradient";
 import * as ImagePicker from "expo-image-picker";
 
 import FeedScreen from "./src/screens/FeedScreen";
@@ -23,9 +23,9 @@ import StatsCard from "./src/components/StatsCard";
 import useItems from "./src/hooks/useItems";
 import MatchesScreen from "./src/screens/MatchesScreen";
 import { getTimeAgo } from "./src/utils/timeAgo";
-import { SIZES } from "./src/constants/theme";
+import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme"; // Import Theme Utilities
 
-export default function App() {
+function MainAppContent() {
     const [screen, setScreen] = useState("feed");
     const [title, setTitle] = useState("");
     const [location, setLocation] = useState("");
@@ -43,11 +43,15 @@ export default function App() {
         items,
         ownedItems,
         refreshing,
+        loading,
         onRefresh,
         addItem,
         markClaimed,
         deleteItem,
     } = useItems();
+
+    // Consume dynamic theme parameters
+    const { colors, isDarkMode } = useTheme();
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -118,22 +122,30 @@ export default function App() {
         return item.type === filter || item.status === filter;
     });
 
+    if (loading) {
+        return (
+            <View style={[styles.mainContainer, { backgroundColor: colors.background }, styles.centerContainer]}>
+                <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor={colors.background} translucent />
+                <Text style={[styles.loadingTitle, { color: colors.textPrimary }]}>Waking up server...</Text>
+                <Text style={[styles.loadingSubtitle, { color: colors.textSecondary }]}>This may take a few seconds</Text>
+            </View>
+        );
+    }
+    
     return (
-        <LinearGradient
-            colors={["#0f172a", "#1e293b", "#312e81"]}
-            style={styles.gradientContainer}
-        >
-            {/* Forces phone clock, battery, and cellular indicators to render crisp white */}
-            <StatusBar barStyle="light-content" backgroundColor="#0f172a" translucent />
+        <SafeAreaView style={[styles.mainContainer, { backgroundColor: colors.background }]}>
+            <StatusBar 
+                barStyle={isDarkMode ? "light-content" : "dark-content"} 
+                backgroundColor={colors.background} 
+                translucent={false} 
+            />
 
-            {/* Application Brand Header View Box */}
             {screen !== "about" && (
                 <View style={styles.headerWrapper}>
-                    <Text style={styles.brandTitle}>LostIt</Text>
+                    <Text style={[styles.brandTitle, { color: colors.primary }]}>LostIt</Text>
                 </View>
             )}
 
-            {/* Dynamic Screen View Switching Modules */}
             {screen === "feed" && (
                 <View style={styles.screenFlexWrapper}>
                     <View style={styles.paddedHeaderElements}>
@@ -199,31 +211,52 @@ export default function App() {
                 <AboutScreen />
             )}
 
-            {/* Persistent Global Floating Overlay Menu */}
             <BottomNav screen={screen} setScreen={setScreen} />
-        </LinearGradient>
+        </SafeAreaView>
+    );
+}
+
+// Main shell component wrapping with Provider
+export default function App() {
+    return (
+        <ThemeProvider>
+            <MainAppContent />
+        </ThemeProvider>
     );
 }
 
 const styles = StyleSheet.create({
-    gradientContainer: {
+    mainContainer: {
         flex: 1,
-        paddingTop: 50, // Perfected placement gap under native hardware status bar bars
+        // Dynamic padding injection handles hardware notches safely
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0, 
+    },
+    centerContainer: {
+        justifyContent: "center",
+        alignItems: "center",
     },
     screenFlexWrapper: {
         flex: 1,
     },
     headerWrapper: {
         paddingHorizontal: SIZES.medium,
+        marginTop: 10,
         marginBottom: SIZES.small,
     },
     brandTitle: {
-        color: "white",
         fontSize: 32,
         fontWeight: "900",
-        letterSpacing: -0.5,
+        letterSpacing: -1,
     },
     paddedHeaderElements: {
         paddingHorizontal: SIZES.medium,
+    },
+    loadingTitle: {
+        fontSize: 20,
+        fontWeight: "700",
+    },
+    loadingSubtitle: {
+        marginTop: 8,
+        fontSize: 14,
     },
 });
