@@ -1,17 +1,18 @@
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet, Platform } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "../constants/theme";
+import { SIZES, SHADOWS, useTheme } from "../constants/theme";
 
 export default function BottomNav({ screen, setScreen }) {
+    const { colors: COLORS } = useTheme();
     const tabs = [
         { id: "feed", icon: "🏠", label: "Home" },
         { id: "report", icon: "➕", label: "Report" },
         { id: "search", icon: "🔎", label: "Search" },
-        { id: "about", icon: "ℹ️", label: "About" } // Added variation selector token to the emoji for clean rendering
+        { id: "about", icon: "ℹ️", label: "About" }
     ];
 
     return (
-        <View style={styles.navBarContainer}>
+        <View style={[styles.navBarContainer, { backgroundColor: COLORS.cardBg, borderTopColor: COLORS.border }]}>
             {tabs.map((tab) => {
                 const isActive = screen === tab.id;
                 return (
@@ -22,10 +23,10 @@ export default function BottomNav({ screen, setScreen }) {
                         style={styles.tabButton}
                     >
                         <View style={styles.iconWrapper}>
-                            <Text style={[styles.iconText, isActive ? styles.iconActive : styles.iconInactive]}>
+                            <Text style={[styles.iconText, isActive ? styles.iconActive : { opacity: 0.4 }]}>
                                 {tab.icon}
                             </Text>
-                            {isActive && <View style={styles.activeIndicatorLine} />}
+                            {isActive && <View style={[styles.activeIndicatorLine, { backgroundColor: COLORS.primary }]} />}
                         </View>
                     </TouchableOpacity>
                 );
@@ -38,9 +39,7 @@ const styles = StyleSheet.create({
     navBarContainer: {
         flexDirection: "row",
         justifyContent: "space-around",
-        backgroundColor: "rgba(23, 37, 84, 0.95)", 
         borderTopWidth: 1,
-        borderTopColor: "rgba(255, 255, 255, 0.1)",
         paddingVertical: Platform.OS === "ios" ? 14 : 10,
         paddingBottom: Platform.OS === "ios" ? 32 : 18, 
         position: "absolute",
@@ -53,33 +52,29 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         flex: 1,
-        minHeight: 44, // Ensures high touch accuracy across all four items
+        minHeight: 44,
     },
     iconWrapper: {
         alignItems: "center",
         justifyContent: "center",
         position: "relative",
-        paddingBottom: 8, // Adds a safe layout buffer block inside the box container
+        paddingBottom: 8,
         minWidth: 40,
     },
     iconText: {
-        fontSize: 24, // Optimized down slightly from 26 so 4 columns balance perfectly
+        fontSize: 24,
         textAlign: "center",
-        includeFontPadding: false, // Removes extra native spacing quirks on Android devices
+        includeFontPadding: false,
     },
     iconActive: {
         opacity: 1,
         transform: [{ scale: 1.1 }],
     },
-    iconInactive: {
-        opacity: 0.4,
-    },
     activeIndicatorLine: {
         position: "absolute",
-        bottom: 0, // Brought up into safe internal padding range to stop vertical clipping
+        bottom: 0,
         width: 16,
         height: 3,
         borderRadius: 2,
-        backgroundColor: COLORS.buttonBlue,
     },
 });

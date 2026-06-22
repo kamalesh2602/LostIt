@@ -1,10 +1,9 @@
-
 import React from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { SIZES, SHADOWS, useTheme } from "../constants/theme"; // Updated
+import { SIZES, SHADOWS, useTheme } from "../constants/theme"; // Import useTheme
 
 export default function FilterBar({ filter, setFilter, showMine, setShowMine }) {
-    const { colors: COLORS } = useTheme(); // ⬅️ Added
+    const { colors: COLORS } = useTheme(); // Renames to uppercase locally
 
     return (
         <View style={styles.container}>
@@ -50,60 +49,30 @@ const styles = StyleSheet.create({
     pillRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        gap: 6,
         marginBottom: SIZES.small,
     },
     pill: {
-        flex: 1,
-        paddingVertical: 10,
-        borderRadius: SIZES.radiusLarge,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: SIZES.radiusMedium,
         alignItems: "center",
         justifyContent: "center",
-        ...SHADOWS.light,
-    },
-    pillActive: {
-        backgroundColor: COLORS.buttonBlue,
-    },
-    pillInactive: {
-        backgroundColor: "rgba(255, 255, 255, 0.15)",
+        minWidth: 65,
     },
     pillText: {
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: "700",
-        letterSpacing: 0.5,
-    },
-    textActive: {
-        color: COLORS.white,
-    },
-    textInactive: {
-        color: COLORS.border,
     },
     toggleButton: {
-        paddingVertical: 10,
-        paddingHorizontal: SIZES.medium,
+        paddingVertical: 12,
         borderRadius: SIZES.radiusMedium,
-        alignSelf: "center",
-        borderWidth: 1,
-        minWidth: 160,
         alignItems: "center",
-    },
-    toggleActive: {
-        backgroundColor: "#D97706",
-        borderColor: "#D97706",
-    },
-    toggleInactive: {
-        backgroundColor: "transparent",
-        borderColor: COLORS.border,
+        justifyContent: "center",
+        borderWidth: 1,
     },
     toggleText: {
-        fontSize: SIZES.small,
-        fontWeight: "700",
+        fontSize: 12,
+        fontWeight: "800",
         letterSpacing: 0.5,
-    },
-    toggleTextActive: {
-        color: COLORS.white,
-    },
-    toggleTextInactive: {
-        color: COLORS.border,
     },
 });

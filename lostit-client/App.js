@@ -23,7 +23,7 @@ import StatsCard from "./src/components/StatsCard";
 import useItems from "./src/hooks/useItems";
 import MatchesScreen from "./src/screens/MatchesScreen";
 import { getTimeAgo } from "./src/utils/timeAgo";
-import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme"; // Import Theme Utilities
+import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme"; 
 
 function MainAppContent() {
     const [screen, setScreen] = useState("feed");
@@ -216,7 +216,6 @@ function MainAppContent() {
     );
 }
 
-// Main shell component wrapping with Provider
 export default function App() {
     return (
         <ThemeProvider>
@@ -228,7 +227,6 @@ export default function App() {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        // Dynamic padding injection handles hardware notches safely
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0, 
     },
     centerContainer: {

@@ -20,8 +20,6 @@ export default function ItemCard({
     setMatches,
     setScreen,
 }) {
-    // Intercept active theme settings and locally map it to uppercase COLORS 
-    // to match all inline definitions safely!
     const { colors: COLORS } = useTheme(); 
     const [matchCount, setMatchCount] = useState(0);
 
@@ -76,7 +74,6 @@ export default function ItemCard({
             <View style={styles.contentBody}>
                 <Text style={[styles.categoryText, { color: COLORS.primary }]}>🏷️ {item.category}</Text>
                 
-                {/* FIXED: Explicitly tied to dynamic text color token to strip white text overrides */}
                 <Text style={[styles.titleText, { color: COLORS.textPrimary }]}>
                     {item.title}
                 </Text>
