@@ -6,7 +6,7 @@ import {
     StyleSheet,
     View,
     SafeAreaView,
-    Platform
+    Platform, Linking
 } from "react-native";
 
 import * as Application from "expo-application";
@@ -62,9 +62,7 @@ function MainAppContent() {
     useEffect(() => {
         checkForUpdates();
     }, []);
-    useEffect(() => {
-        checkForUpdates();
-    }, []);
+    
 
     const checkForUpdates = async () => {
         try {

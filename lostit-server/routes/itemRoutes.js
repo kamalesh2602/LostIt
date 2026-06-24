@@ -20,6 +20,6 @@ router.patch("/:id/claim",claimItem);
 router.delete("/:id",deleteItem);
 router.get("/:id/match-count",getMatchCount);
 
-// router.post(  "/test-notification",  testNotification);  //for test
+router.post("/test-notification",  testNotification);  //for test
 
 module.exports = router;

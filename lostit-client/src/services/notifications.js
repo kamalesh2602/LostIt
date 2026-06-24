@@ -1,5 +1,6 @@
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { Alert } from "react-native";
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -55,6 +56,11 @@ export async function registerForPushNotifications() {
             })
         ).data;
 
+        console.log(
+            "Expo Push Token:",
+            token
+        );
+
         Alert.alert(
             "Push Token Generated",
             token
@@ -62,12 +68,16 @@ export async function registerForPushNotifications() {
 
         return token;
     } catch (err) {
-        Alert.alert(
-            "Push Token Error",
-            JSON.stringify(err)
+        console.log(
+            "Push Token Error:",
+            err
         );
 
-        console.log(err);
+        Alert.alert(
+            "Push Token Error",
+            String(err)
+        );
+
         return null;
     }
 

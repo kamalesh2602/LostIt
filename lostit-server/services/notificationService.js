@@ -23,3 +23,7 @@ const sendPushNotification =
             }
         );
     };
+
+    module.exports = {
+    sendPushNotification,
+};
