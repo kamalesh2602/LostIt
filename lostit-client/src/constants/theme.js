@@ -1,18 +1,20 @@
 // src/constants/theme.js
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 export const LIGHT_COLORS = {
-  primary: '#007AFF',       
-  background: '#F8FAFC',    
-  cardBg: '#FFFFFF',        
-  border: '#E2E8F0',        
-  textPrimary: '#0F172A',   
-  textSecondary: '#475569', 
-  textMuted: '#94A3B8',     
-  buttonBlue: '#007AFF',    
-  lost: '#EF4444',          
-  found: '#22C55E',         
-  claimed: '#64748B',       
+  primary: '#007AFF',
+  background: '#F8FAFC',
+  cardBg: '#FFFFFF',
+  border: '#E2E8F0',
+  textPrimary: '#0F172A',
+  textSecondary: '#475569',
+  textMuted: '#94A3B8',
+  buttonBlue: '#007AFF',
+  lost: '#EF4444',
+  found: '#22C55E',
+  claimed: '#64748B',
   white: '#FFFFFF',
   innerBoxBg: '#F1F5F9',
 };
@@ -25,10 +27,10 @@ export const DARK_COLORS = {
   textPrimary: '#F8FAFC',   // Clean off-white for main titles
   textSecondary: '#94A3B8', // Muted slate gray for text descriptions
   textMuted: '#64748B',     // Placeholder gray
-  buttonBlue: '#3B82F6',    
-  lost: '#EF4444',          
-  found: '#22C55E',         
-  claimed: '#64748B',       
+  buttonBlue: '#3B82F6',
+  lost: '#EF4444',
+  found: '#22C55E',
+  claimed: '#64748B',
   white: '#FFFFFF',
   innerBoxBg: '#0F172A',
 };
@@ -41,7 +43,7 @@ export const SIZES = {
   large: 20,
   extraLarge: 26,
   radiusSmall: 10,
-  radiusMedium: 16,         
+  radiusMedium: 16,
   radiusLarge: 24,
 };
 
@@ -66,13 +68,58 @@ export const SHADOWS = {
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] =  useState(false);
+    const [themeLoaded, setThemeLoaded] = useState(false);
 
-  const toggleTheme = () => setIsDarkMode((prev) => !prev);
-  const colors = isDarkMode ? DARK_COLORS : LIGHT_COLORS;
+  useEffect(() => {
+    loadTheme();
+  }, []);
+
+  const loadTheme = async () => {
+  try {
+    const savedTheme =
+      await AsyncStorage.getItem(
+        "theme"
+      );
+
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+    }
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setThemeLoaded(true);
+  }
+};
+
+  const toggleTheme = async () => {
+    const nextTheme =
+      !isDarkMode;
+
+    setIsDarkMode(nextTheme);
+
+    await AsyncStorage.setItem(
+      "theme",
+      nextTheme
+        ? "dark"
+        : "light"
+    );
+  };
+
+  const colors =
+    isDarkMode
+      ? DARK_COLORS
+      : LIGHT_COLORS;
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, colors }}>
+    <ThemeContext.Provider
+      value={{
+        isDarkMode,
+        toggleTheme,
+        colors,
+        themeLoaded
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );

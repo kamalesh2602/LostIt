@@ -51,7 +51,7 @@ function MainAppContent() {
     } = useItems();
 
     // Consume dynamic theme parameters
-    const { colors, isDarkMode } = useTheme();
+    const { colors, isDarkMode, themeloaded } = useTheme();
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -122,7 +122,7 @@ function MainAppContent() {
         return item.type === filter || item.status === filter;
     });
 
-    if (loading) {
+    if (loading || !themeloaded) {
         return (
             <View style={[styles.mainContainer, { backgroundColor: colors.background }, styles.centerContainer]}>
                 <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor={colors.background} translucent />
