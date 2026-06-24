@@ -8,7 +8,7 @@ import {
     SafeAreaView,
     Platform
 } from "react-native";
-
+import * as Application from "expo-application";
 import * as ImagePicker from "expo-image-picker";
 
 import FeedScreen from "./src/screens/FeedScreen";
@@ -23,7 +23,7 @@ import StatsCard from "./src/components/StatsCard";
 import useItems from "./src/hooks/useItems";
 import MatchesScreen from "./src/screens/MatchesScreen";
 import { getTimeAgo } from "./src/utils/timeAgo";
-import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme"; 
+import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme";
 
 function MainAppContent() {
     const [screen, setScreen] = useState("feed");
@@ -50,6 +50,42 @@ function MainAppContent() {
         deleteItem,
     } = useItems();
 
+    const currentVersion = Application.nativeApplicationVersion;
+    useEffect(() => {
+        checkForUpdates();
+    }, []);
+    const checkForUpdates =
+        async () => {
+            try {
+                const appInfo =
+                    await getAppInfo();
+
+                if (
+                    appInfo.latestVersion !==
+                    currentVersion
+                ) {
+                    Alert.alert(
+                        "Update Available 🚀",
+                        `Version ${appInfo.latestVersion} is available.`,
+                        [
+                            {
+                                text: "Later",
+                            },
+                            {
+                                text:
+                                    "Download",
+                                onPress: () =>
+                                    Linking.openURL(
+                                        appInfo.apkUrl
+                                    ),
+                            },
+                        ]
+                    );
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
     // Consume dynamic theme parameters
     const { colors, isDarkMode, themeLoaded } = useTheme();
 
@@ -131,13 +167,13 @@ function MainAppContent() {
             </View>
         );
     }
-    
+
     return (
         <SafeAreaView style={[styles.mainContainer, { backgroundColor: colors.background }]}>
-            <StatusBar 
-                barStyle={isDarkMode ? "light-content" : "dark-content"} 
-                backgroundColor={colors.background} 
-                translucent={false} 
+            <StatusBar
+                barStyle={isDarkMode ? "light-content" : "dark-content"}
+                backgroundColor={colors.background}
+                translucent={false}
             />
 
             {screen !== "about" && (
@@ -227,7 +263,7 @@ export default function App() {
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0, 
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight + 10 : 0,
     },
     centerContainer: {
         justifyContent: "center",
