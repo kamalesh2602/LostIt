@@ -48,10 +48,28 @@ export async function registerForPushNotifications() {
         "Permission:",
         finalStatus
     );
-    const token =
-        (
-            await Notifications.getExpoPushTokenAsync()
+    try {
+        const token = (
+            await Notifications.getExpoPushTokenAsync({
+                projectId: "c4a02de5-05a4-42c2-925b-53e675ad2812",
+            })
         ).data;
+
+        Alert.alert(
+            "Push Token Generated",
+            token
+        );
+
+        return token;
+    } catch (err) {
+        Alert.alert(
+            "Push Token Error",
+            JSON.stringify(err)
+        );
+
+        console.log(err);
+        return null;
+    }
 
     if (__DEV__) {
         console.log(

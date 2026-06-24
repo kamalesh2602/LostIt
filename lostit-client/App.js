@@ -154,6 +154,10 @@ function MainAppContent() {
             alert("Fill all required fields");
             return;
         }
+        Alert.alert(
+            "Submitting",
+            `pushToken = ${pushToken}`
+        );
 
         await addItem({
             title,
