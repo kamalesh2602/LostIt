@@ -28,6 +28,9 @@ import MatchesScreen from "./src/screens/MatchesScreen";
 import { getTimeAgo } from "./src/utils/timeAgo";
 import { SIZES, ThemeProvider, useTheme } from "./src/constants/theme";
 
+import { registerForPushNotifications, } from "./src/services/notifications";
+
+
 function MainAppContent() {
     const [screen, setScreen] = useState("feed");
     const [title, setTitle] = useState("");
@@ -41,6 +44,7 @@ function MainAppContent() {
     const [filter, setFilter] = useState("ALL");
     const [showMine, setShowMine] = useState(false);
     const [matches, setMatches] = useState([]);
+    const [pushToken, setPushToken] = useState(null);
 
     const {
         items,
@@ -63,7 +67,7 @@ function MainAppContent() {
             try {
                 const appInfo =
                     await getAppInfo();
-                
+
                 if (
                     appInfo.latestVersion !==
                     currentVersion
@@ -90,6 +94,18 @@ function MainAppContent() {
                 console.log(err);
             }
         };
+
+    useEffect(() => {
+        async function init() {
+            const token =
+                await registerForPushNotifications();
+
+            setPushToken(token);
+        }
+
+        init();
+    }, []);
+
     // Consume dynamic theme parameters
     const { colors, isDarkMode, themeLoaded } = useTheme();
 
@@ -136,6 +152,7 @@ function MainAppContent() {
             description,
             status: "ACTIVE",
             type,
+            pushToken,
         });
 
         setTitle("");

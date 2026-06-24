@@ -1,5 +1,10 @@
 const Item = require("../models/Item");
 const crypto = require("crypto");
+const {
+    sendPushNotification,
+} = require(
+    "../services/notificationService"
+);
 
 const getItems = async (req, res) => {
     const items = await Item.find().sort({
@@ -10,24 +15,92 @@ const getItems = async (req, res) => {
 };
 
 const createItem = async (req, res) => {
+
     const ownerToken =
         crypto.randomUUID();
 
     const item = await Item.create({
         ...req.body,
-        title:
-            req.body.title?.trim(),
-        location:
-            req.body.location?.trim(),
-        description:
-            req.body.description?.trim(),
-        contact:
-            req.body.contact?.trim(),
+        title: req.body.title?.trim(),
+        location: req.body.location?.trim(),
+        description: req.body.description?.trim(),
+        contact: req.body.contact?.trim(),
         ownerToken,
+        pushToken: req.body.pushToken,
     });
+    const matches =
+        await findMatchesForItem(
+            item
+        );
 
+    if (process.env.NODE_ENV !== "production") {
+        console.log(
+            "Matches found:",
+            matches.length
+        );
+    }
+
+    for (const match of matches) {
+        if (
+            match.pushToken &&
+            match.pushToken !==
+            item.pushToken
+        ) {
+            try {
+                await sendPushNotification(
+                    match.pushToken,
+                    "🔍 Potential Match Found",
+                    "Someone reported an item similar to yours."
+                );
+            } catch (err) {
+                console.error(
+                    "Failed notifying match:",
+                    err.message
+                );
+            }
+        }
+
+        if (
+            item.pushToken &&
+            item.pushToken !==
+            match.pushToken
+        ) {
+            try {
+                await sendPushNotification(
+                    item.pushToken,
+                    "🔍 Potential Match Found",
+                    "Someone reported an item similar to yours."
+                );
+            }
+            catch (err) {
+                console.error(
+                    "Failed notifying match:",
+                    err.message
+                );
+            }
+
+        }
+    }
     res.status(201).json(item);
 };
+
+
+
+
+const testNotification =
+    async (req, res) => {
+        const { pushToken } =
+            req.body;
+
+        const result =
+            await sendPushNotification(
+                pushToken,
+                "LostIt Test 🚀",
+                "Notifications are working!"
+            );
+
+        res.json(result);
+    };
 
 const getTimeAgo = (timestamp) => {
     const seconds = Math.floor(
@@ -194,11 +267,34 @@ const getMatchCount = async (req, res) => {
     });
 };
 
+const findMatchesForItem =
+    async (item) => {
+        const oppositeType =
+            item.type === "LOST"
+                ? "FOUND"
+                : "LOST";
+
+        return await Item.find({
+            _id: {
+                $ne: item._id,
+            },
+            type: oppositeType,
+            category: item.category,
+            status: "ACTIVE",
+            title: {
+                $regex: item.title.trim(),
+                $options: "i",
+            },
+        });
+    };
+
+
 module.exports = {
     getItems,
     createItem,
     claimItem,
     deleteItem,
     getMatches,
-    getMatchCount
+    getMatchCount,
+    testNotification,
 };
