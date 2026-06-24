@@ -12,9 +12,7 @@ Notifications.setNotificationHandler({
 });
 
 export async function registerForPushNotifications() {
-    console.log(
-        "Registering notifications..."
-    );
+
     if (!Device.isDevice) {
         alert(
             "Must use a physical device"
@@ -55,17 +53,6 @@ export async function registerForPushNotifications() {
                 projectId: "c4a02de5-05a4-42c2-925b-53e675ad2812",
             })
         ).data;
-
-        console.log(
-            "Expo Push Token:",
-            token
-        );
-
-        Alert.alert(
-            "Push Token Generated",
-            token
-        );
-
         return token;
     } catch (err) {
         console.log(
@@ -73,10 +60,7 @@ export async function registerForPushNotifications() {
             err
         );
 
-        Alert.alert(
-            "Push Token Error",
-            String(err)
-        );
+
 
         return null;
     }

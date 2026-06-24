@@ -69,15 +69,7 @@ function MainAppContent() {
             const appInfo =
                 await getAppInfo();
 
-            console.log(
-                "Current:",
-                currentVersion
-            );
-
-            console.log(
-                "Latest:",
-                appInfo.latestVersion
-            );
+            
 
             if (
                 appInfo.latestVersion !==
@@ -152,10 +144,7 @@ function MainAppContent() {
             alert("Fill all required fields");
             return;
         }
-        Alert.alert(
-            "Submitting",
-            `pushToken = ${pushToken}`
-        );
+        
 
         await addItem({
             title,

@@ -20,6 +20,7 @@ router.patch("/:id/claim",claimItem);
 router.delete("/:id",deleteItem);
 router.get("/:id/match-count",getMatchCount);
 
+// Debug endpoint - used for notification testing
 router.post("/test-notification",  testNotification);  //for test
 
 module.exports = router;

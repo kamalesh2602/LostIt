@@ -5,6 +5,7 @@ const {
 } = require(
     "../services/notificationService"
 );
+const isDevelopment = process.env.NODE_ENV !== "production";
 
 const getItems = async (req, res) => {
     const items = await Item.find().sort({
@@ -41,11 +42,24 @@ const createItem = async (req, res) => {
     }
 
     for (const match of matches) {
-        if (
+
+        const shouldNotifyMatch =
             match.pushToken &&
-            match.pushToken !==
-            item.pushToken
-        ) {
+            (
+                isDevelopment ||
+                match.pushToken !==
+                item.pushToken
+            );
+
+        const shouldNotifyItem =
+            item.pushToken &&
+            (
+                isDevelopment ||
+                item.pushToken !==
+                match.pushToken
+            );
+
+        if (shouldNotifyMatch) {
             try {
                 await sendPushNotification(
                     match.pushToken,
@@ -60,25 +74,19 @@ const createItem = async (req, res) => {
             }
         }
 
-        if (
-            item.pushToken &&
-            item.pushToken !==
-            match.pushToken
-        ) {
+        if (shouldNotifyItem) {
             try {
                 await sendPushNotification(
                     item.pushToken,
                     "🔍 Potential Match Found",
                     "Someone reported an item similar to yours."
                 );
-            }
-            catch (err) {
+            } catch (err) {
                 console.error(
-                    "Failed notifying match:",
+                    "Failed notifying item:",
                     err.message
                 );
             }
-
         }
     }
     res.status(201).json(item);
@@ -218,10 +226,7 @@ const getMatches = async (
         });
 
     res.json(matches);
-    console.log("Current:", item.title);
-
-    console.log("Opposite:", oppositeType);
-    console.log(matches);
+   
 };
 
 const getMatchCount = async (req, res) => {
@@ -257,10 +262,7 @@ const getMatchCount = async (req, res) => {
             },
         });
 
-    console.log(
-        "Match Count:",
-        count
-    );
+    
 
     res.json({
         count,
