@@ -7,12 +7,14 @@ import {
     Linking,
     StyleSheet,
 } from "react-native";
-import { COLORS, SIZES, SHADOWS } from "../constants/theme";
+import { SIZES, SHADOWS, useTheme } from "../constants/theme";
 
 export default function MatchesScreen({ matches = [] }) {
+    const { colors: COLORS } = useTheme(); // Hook into the dynamic theme engine
+
     return (
         <View style={styles.container}>
-            <Text style={styles.headerTitle}>🎯 Possible Matches</Text>
+            <Text style={[styles.headerTitle, { color: COLORS.textPrimary }]}>🎯 Possible Matches</Text>
 
             <FlatList
                 data={matches}
@@ -20,23 +22,27 @@ export default function MatchesScreen({ matches = [] }) {
                 contentContainerStyle={styles.listContainer}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item }) => (
-                    <View style={styles.matchCard}>
+                    <View style={[styles.matchCard, { backgroundColor: COLORS.cardBg, borderColor: COLORS.border }]}>
                         <View style={styles.cardHeader}>
-                            <Text style={styles.itemTitle}>{item.title}</Text>
+                            <Text style={[styles.itemTitle, { color: COLORS.textPrimary }]}>{item.title}</Text>
                         </View>
 
-                        <Text style={styles.locationText}>📍 {item.location}</Text>
+                        <Text style={[styles.locationText, { color: COLORS.textSecondary }]}>📍 {item.location}</Text>
                         
                         {item.description ? (
-                            <Text style={styles.descriptionText}>{item.description}</Text>
+                            <Text style={[styles.descriptionText, { color: COLORS.textSecondary, backgroundColor: COLORS.innerBoxBg }]}>
+                                {item.description}
+                            </Text>
                         ) : null}
 
                         <TouchableOpacity
                             activeOpacity={0.7}
                             onPress={() => Linking.openURL(`tel:${item.contact}`)}
-                            style={styles.contactButton}
+                            style={[styles.contactButton, { backgroundColor: COLORS.buttonBlue }]}
                         >
-                            <Text style={styles.contactButtonText}>📞 Call Owner / Finder ({item.contact})</Text>
+                            <Text style={[styles.contactButtonText, { color: COLORS.white }]}>
+                                📞 Call Owner / Finder ({item.contact})
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 )}
@@ -50,7 +56,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     headerTitle: {
-        color: COLORS.white,
         fontSize: SIZES.extraLarge,
         fontWeight: "800",
         marginHorizontal: SIZES.medium,
@@ -59,13 +64,13 @@ const styles = StyleSheet.create({
     },
     listContainer: {
         paddingHorizontal: SIZES.medium,
-        paddingBottom: 120, // Cushion against floating navigation overlay
+        paddingBottom: 140, 
     },
     matchCard: {
-        backgroundColor: COLORS.cardBg,
         padding: SIZES.medium,
-        borderRadius: SIZES.radiusMedium,
+        borderRadius: SIZES.radiusLarge,
         marginBottom: SIZES.small,
+        borderWidth: 1,
         ...SHADOWS.medium,
     },
     cardHeader: {
@@ -74,31 +79,26 @@ const styles = StyleSheet.create({
     itemTitle: {
         fontSize: SIZES.large,
         fontWeight: "700",
-        color: COLORS.textPrimary,
     },
     locationText: {
         fontSize: SIZES.font,
-        color: COLORS.textSecondary,
         marginBottom: SIZES.base,
     },
     descriptionText: {
         fontSize: SIZES.font,
-        color: COLORS.textSecondary,
-        backgroundColor: "#F8FAFC",
         padding: SIZES.base,
         borderRadius: SIZES.radiusSmall,
         marginBottom: SIZES.medium,
         fontStyle: "italic",
     },
     contactButton: {
-        backgroundColor: COLORS.buttonBlue,
         paddingVertical: 12,
         borderRadius: SIZES.radiusMedium,
         alignItems: "center",
         justifyContent: "center",
+        ...SHADOWS.light,
     },
     contactButtonText: {
-        color: COLORS.white,
         fontWeight: "700",
         fontSize: SIZES.font,
     },
