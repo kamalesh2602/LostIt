@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const itemRoutes = require("./routes/itemRoutes");
+const appRoutes = require("./routes/appRoutes");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/items", itemRoutes);
+app.use("/api/app", appRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
