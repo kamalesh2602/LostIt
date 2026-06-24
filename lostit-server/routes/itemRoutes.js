@@ -7,7 +7,7 @@ const {
   createItem,
   claimItem,
   deleteItem,
-  getMatches, getMatchCount
+  getMatches, getMatchCount, testNotification
 } = require(
   "../controllers/itemController"
 );
@@ -19,5 +19,7 @@ router.get("/:id/matches",getMatches);
 router.patch("/:id/claim",claimItem);
 router.delete("/:id",deleteItem);
 router.get("/:id/match-count",getMatchCount);
+
+// router.post(  "/test-notification",  testNotification);  //for test
 
 module.exports = router;

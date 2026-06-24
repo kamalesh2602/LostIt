@@ -9,6 +9,9 @@ const itemSchema = new mongoose.Schema(
         category: String,
         image: String,
         type: String,
+        pushToken: {
+            type: String,
+        },
         ownerToken: {
             type: String,
         },
