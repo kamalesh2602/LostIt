@@ -11,6 +11,9 @@ Notifications.setNotificationHandler({
 });
 
 export async function registerForPushNotifications() {
+    console.log(
+        "Registering notifications..."
+    );
     if (!Device.isDevice) {
         alert(
             "Must use a physical device"
@@ -41,7 +44,10 @@ export async function registerForPushNotifications() {
         );
         return null;
     }
-
+    console.log(
+        "Permission:",
+        finalStatus
+    );
     const token =
         (
             await Notifications.getExpoPushTokenAsync()

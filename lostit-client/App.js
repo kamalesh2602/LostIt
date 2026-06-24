@@ -62,38 +62,50 @@ function MainAppContent() {
     useEffect(() => {
         checkForUpdates();
     }, []);
-    const checkForUpdates =
-        async () => {
-            try {
-                const appInfo =
-                    await getAppInfo();
+    useEffect(() => {
+        checkForUpdates();
+    }, []);
 
-                if (
-                    appInfo.latestVersion !==
-                    currentVersion
-                ) {
-                    Alert.alert(
-                        "Update Available 🚀",
-                        "Update now to get the latest features and improvements.",
-                        [
-                            {
-                                text: "Later",
-                            },
-                            {
-                                text:
-                                    "Download",
-                                onPress: () =>
-                                    Linking.openURL(
-                                        appInfo.apkUrl
-                                    ),
-                            },
-                        ]
-                    );
-                }
-            } catch (err) {
-                console.log(err);
+    const checkForUpdates = async () => {
+        try {
+            const appInfo =
+                await getAppInfo();
+
+            console.log(
+                "Current:",
+                currentVersion
+            );
+
+            console.log(
+                "Latest:",
+                appInfo.latestVersion
+            );
+
+            if (
+                appInfo.latestVersion !==
+                currentVersion
+            ) {
+                Alert.alert(
+                    "Update Available 🚀",
+                    "Update now to get the latest features and improvements.",
+                    [
+                        {
+                            text: "Later",
+                        },
+                        {
+                            text: "Download",
+                            onPress: () =>
+                                Linking.openURL(
+                                    appInfo.apkUrl
+                                ),
+                        },
+                    ]
+                );
             }
-        };
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     useEffect(() => {
         async function init() {
