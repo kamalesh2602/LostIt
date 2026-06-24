@@ -87,6 +87,10 @@ Run:
 ```bash
 npx expo start
 ```
+To build 
+```
+eas build --platform android --profile preview
+```
 
 ## API Endpoints
 
@@ -121,12 +125,12 @@ GET /api/items/:id/matches
 ```
 
 
-### Version 1.1.0
+### Version 1.2.0
 
 
 ### Future Versions
 
-* Push notifications
+* Better Push notifications
 * Smarter matching algorithm
 * Cloud image storage
 * Community moderation tools
