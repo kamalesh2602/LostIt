@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Alert,
     Text,
@@ -8,7 +8,10 @@ import {
     SafeAreaView,
     Platform
 } from "react-native";
+
 import * as Application from "expo-application";
+// import Constants from "expo-constants";  //version check in expogo 
+import { getAppInfo } from "./src/services/appService";
 import * as ImagePicker from "expo-image-picker";
 
 import FeedScreen from "./src/screens/FeedScreen";
@@ -51,6 +54,7 @@ function MainAppContent() {
     } = useItems();
 
     const currentVersion = Application.nativeApplicationVersion;
+
     useEffect(() => {
         checkForUpdates();
     }, []);
@@ -59,14 +63,14 @@ function MainAppContent() {
             try {
                 const appInfo =
                     await getAppInfo();
-
+                
                 if (
                     appInfo.latestVersion !==
                     currentVersion
                 ) {
                     Alert.alert(
                         "Update Available 🚀",
-                        `Version ${appInfo.latestVersion} is available.`,
+                        "Update now to get the latest features and improvements.",
                         [
                             {
                                 text: "Later",
