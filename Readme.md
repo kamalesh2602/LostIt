@@ -120,14 +120,9 @@ DELETE /api/items/:id
 GET /api/items/:id/matches
 ```
 
-## Roadmap
 
-### Version 1.0
+### Version 1.1.0
 
-* Lost and found reporting
-* Matching system
-* Ownership protection
-* Mobile app deployment
 
 ### Future Versions
 
