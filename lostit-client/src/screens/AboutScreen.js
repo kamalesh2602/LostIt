@@ -40,7 +40,7 @@ export default function AboutScreen() {
                 </TouchableOpacity>
 
                 <View style={[styles.metaBox, { backgroundColor: colors.innerBoxBg, borderColor: colors.border }]}>
-                    <Text style={[styles.metaText, { color: colors.textSecondary }]}>📍 Version 1.1.0</Text>
+                    <Text style={[styles.metaText, { color: colors.textSecondary }]}>📍 Version 1.2.0</Text>
                     <Text style={[styles.metaText, { color: colors.textSecondary }]}>⚙️ Built with React Native, Node.js & MongoDB Atlas</Text>
                 </View>
 
