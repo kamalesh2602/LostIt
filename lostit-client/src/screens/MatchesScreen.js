@@ -41,7 +41,7 @@ export default function MatchesScreen({ matches = [] }) {
                             style={[styles.contactButton, { backgroundColor: COLORS.buttonBlue }]}
                         >
                             <Text style={[styles.contactButtonText, { color: COLORS.white }]}>
-                                📞 Call Owner / Finder ({item.contact})
+                                📞 Call Owner / Finder
                             </Text>
                         </TouchableOpacity>
                     </View>
