@@ -5,6 +5,7 @@ const categories = [
   "Bottle",
   "Bag",
   "Keys",
+  "Others",
 ];
 
 export default categories;
